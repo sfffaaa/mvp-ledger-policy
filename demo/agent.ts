@@ -13,8 +13,13 @@ const scenario = process.argv.find(a => a.startsWith("--scenario="))?.split("=")
 
 const RPC_URL = "http://127.0.0.1:8545";
 
-// Anvil default account #0 — software wallet for approve/reject scenarios
-const AGENT_PK = "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80" as `0x${string}`;
+// Anvil default account #0 — well-known public key for local development only.
+// For real environments, set AGENT_PK env var. Never commit a real private key.
+const AGENT_PK = (process.env.AGENT_PK ?? "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80") as `0x${string}`;
+
+if (!process.env.AGENT_PK) {
+  console.warn("WARN: Using Anvil default private key — local development only, do not use with real funds");
+}
 
 // Must match policy.json allowedRecipients
 const ALLOWED_RECIPIENT = "0x70997970C51812dc3A010C7d01b50e0d17dc79C8" as `0x${string}`;
