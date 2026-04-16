@@ -50,15 +50,8 @@ export async function signAndSendWithLedger(tx: TxRequest): Promise<`0x${string}
     ]);
 
     // Serialize unsigned legacy tx
-    const unsignedTx = serializeTransaction({
-      chainId: anvil.id,
-      nonce,
-      gasPrice,
-      gas,
-      to: tx.to,
-      value: tx.value,
-      data: tx.data,
-    });
+    const txParams = { chainId: anvil.id, nonce, gasPrice, gas, to: tx.to, value: tx.value, data: tx.data };
+    const unsignedTx = serializeTransaction(txParams);
 
     // Sign on Ledger device (user presses confirm button)
     console.log("Please confirm on your Ledger device...");
@@ -66,22 +59,11 @@ export async function signAndSendWithLedger(tx: TxRequest): Promise<`0x${string}
     const { v, r, s } = await eth.signTransaction(DERIVATION_PATH, rawTxHex, null as any);
 
     // Reconstruct signed tx
-    const signedTx = serializeTransaction(
-      {
-        chainId: anvil.id,
-        nonce,
-        gasPrice,
-        gas,
-        to: tx.to,
-        value: tx.value,
-        data: tx.data,
-      },
-      {
-        v: BigInt("0x" + v),
-        r: ("0x" + r) as `0x${string}`,
-        s: ("0x" + s) as `0x${string}`,
-      }
-    );
+    const signedTx = serializeTransaction(txParams, {
+      v: BigInt("0x" + v),
+      r: ("0x" + r) as `0x${string}`,
+      s: ("0x" + s) as `0x${string}`,
+    });
 
     // Broadcast
     const hash = await publicClient.sendRawTransaction({
