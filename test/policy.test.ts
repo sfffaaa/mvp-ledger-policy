@@ -46,6 +46,16 @@ describe("checkPolicy", () => {
     expect(result.reason).toBe("selector_not_allowed");
   });
 
+  it("returns reject when data is too short to contain a valid selector", () => {
+    const tx: TxRequest = {
+      ...ALLOWED_TX,
+      data: "0x123456", // 3 bytes, no valid selector
+    };
+    const result = checkPolicy(tx, POLICY);
+    expect(result.decision).toBe("reject");
+    expect(result.reason).toBe("selector_not_allowed");
+  });
+
   it("reject takes priority over ledger when recipient fails and value exceeds threshold", () => {
     const tx: TxRequest = {
       to: "0xdeadbeefdeadbeefdeadbeefdeadbeefdeadbeef",

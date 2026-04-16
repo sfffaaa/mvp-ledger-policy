@@ -22,7 +22,11 @@ export function checkPolicy(tx: TxRequest, policy: Policy): CheckResult {
   }
 
   // 2. Selector check (only if tx has data and allowedSelectors is non-empty)
-  if (tx.data && tx.data.length >= 10 && policy.allowedSelectors.length > 0) {
+  if (tx.data && tx.data !== "0x" && policy.allowedSelectors.length > 0) {
+    if (tx.data.length < 10) {
+      // data exists but too short to contain a valid 4-byte selector — reject
+      return { decision: "reject", reason: "selector_not_allowed" };
+    }
     const selector = tx.data.slice(0, 10).toLowerCase();
     if (!policy.allowedSelectors.includes(selector)) {
       return { decision: "reject", reason: "selector_not_allowed" };
