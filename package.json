@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "test": "jest --forceExit",
+    "test": "NODE_OPTIONS=--experimental-vm-modules jest --forceExit",
     "demo": "tsx --tsconfig tsconfig.json demo/agent.ts"
   },
   "dependencies": {
@@ -14,8 +14,10 @@
   },
   "devDependencies": {
     "@types/jest": "^29.5.12",
+    "@types/node": "^20",
     "jest": "^29.7.0",
     "ts-jest": "^29.1.4",
+    "ts-node": "^10.9.2",
     "tsx": "^4.7.0",
     "typescript": "^5.4.5"
   }

@@ -4,11 +4,12 @@ const config: Config = {
   testEnvironment: "node",
   testMatch: ["**/test/**/*.test.ts"],
   forceExit: true,
+  extensionsToTreatAsEsm: [".ts"],
   moduleNameMapper: {
     "^(\\.{1,2}/.*)\\.js$": "$1",
   },
   transform: {
-    "^.+\\.tsx?$": ["ts-jest", { diagnostics: false }],
+    "^.+\\.tsx?$": ["ts-jest", { useESM: true, diagnostics: false }],
   },
 };
 export default config;
